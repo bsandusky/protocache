@@ -12,22 +12,38 @@ type Server struct {
 	Store map[string][]byte
 }
 
+// Get resturns value for given key
 func (s *Server) Get(ctx context.Context, req *pb.GetRequest) (*pb.GetResponse, error) {
-	return &pb.GetResponse{}, errors.New("Not implemented")
+	return &pb.GetResponse{
+		Value: s.Store[req.Key],
+		Result: &pb.Result{
+			Status: "OK",
+			Error:  "",
+		},
+	}, nil
 }
 
+// Set creates entry in server store with key and value from request
 func (s *Server) Set(ctx context.Context, req *pb.SetRequest) (*pb.Result, error) {
-	return &pb.Result{}, errors.New("Not implemented")
+	s.Store[req.Key] = req.Value
+	return &pb.Result{Status: "OK", Error: ""}, nil
 }
 
+// FlushAll clears cache
 func (s *Server) FlushAll(ctx context.Context, req *pb.Empty) (*pb.Result, error) {
-	return &pb.Result{}, errors.New("Not implemented")
+	for k := range s.Store {
+		delete(s.Store, k)
+	}
+	return &pb.Result{Status: "OK", Error: ""}, nil
 }
 
+// FlushKey clears given key in server store
 func (s *Server) FlushKey(ctx context.Context, req *pb.FlushKeyRequest) (*pb.Result, error) {
-	return &pb.Result{}, errors.New("Not implemented")
+	delete(s.Store, req.Key)
+	return &pb.Result{Status: "OK", Error: ""}, nil
 }
 
+// Listener provides stream of data activity for monitoring and logging
 func (s *Server) Listener(req *pb.Empty, stream pb.Cache_ListenerServer) error {
 	return errors.New("Not implemented")
 }

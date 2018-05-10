@@ -10,7 +10,7 @@ message GetRequest {
 
 message SetRequest {
     string Key = 1;
-    string Value = 2;
+    bytes Value = 2;
     Result Result = 3;
 }
 
@@ -19,7 +19,7 @@ message FlushKeyRequest {
 }
 
 message GetResponse {
-    string Value = 1;
+    bytes Value = 1;
     Result Result = 2;
 }
 
