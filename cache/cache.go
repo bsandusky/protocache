@@ -1,6 +1,9 @@
 package cache
 
 import (
+	"context"
+	"errors"
+
 	"github.com/bsandusky/protocache/pb"
 )
 
@@ -12,13 +15,13 @@ func (s *Server) Get(ctx context.Context, req *pb.GetRequest) (*pb.GetResponse, 
 }
 
 func (s *Server) Set(ctx context.Context, req *pb.SetRequest) (*pb.SetResponse, error) {
-	return &pb.SetResponse, errors.New("Not implemented")
+	return &pb.SetResponse{}, errors.New("Not implemented")
 }
 
 func (s *Server) FlushAll(ctx context.Context, req *pb.Empty) (*pb.FlushResponse, error) {
-	return &pb.FlushResponse, errors.New("Not implemented")
+	return &pb.FlushResponse{}, errors.New("Not implemented")
 }
 
 func (s *Server) FlushKey(ctx context.Context, req *pb.FlushKeyRequest) (*pb.FlushResponse, error) {
-	reutrn &pb.FlushResponse, errors.New("Not implemented")
+	return &pb.FlushResponse{}, errors.New("Not implemented")
 }
