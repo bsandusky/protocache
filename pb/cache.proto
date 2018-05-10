@@ -16,7 +16,6 @@ message SetRequest {
 
 message FlushKeyRequest {
     string Key = 1;
-    Result Result = 2;
 }
 
 message GetResponse {
@@ -24,21 +23,15 @@ message GetResponse {
     Result Result = 2;
 }
 
-message SetResponse {
-    Result Result = 1;
-}
-
-message FlushResponse {
-    Result Result = 1;
-}
-
 message Result {
     string Status = 1;
+    string Error = 2;
 }
 
 service Cache {
     rpc Get(GetRequest) returns (GetResponse) {}
-    rpc Set(SetRequest) returns (SetResponse) {}
-    rpc FlushAll(Empty) returns (FlushResponse) {}
-    rpc FlushKey(FlushKeyRequest) returns (FlushResponse) {}
+    rpc Set(SetRequest) returns (Result) {}
+    rpc FlushAll(Empty) returns (Result) {}
+    rpc FlushKey(FlushKeyRequest) returns (Result) {}
+    rpc Listener(Empty) returns (stream Result) {}
 }
