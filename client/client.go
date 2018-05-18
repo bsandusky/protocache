@@ -1,9 +1,11 @@
 package main
 
 import (
-	"flag"
+	"bufio"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 
 	"github.com/bsandusky/protocache/pb"
 	"golang.org/x/net/context"
@@ -19,32 +21,42 @@ func main() {
 	defer conn.Close()
 	client := pb.NewCacheClient(conn)
 
-	flag.Parse()
-	switch flag.Arg(0) {
-	case "get":
-		res, err := client.Get(context.Background(), &pb.GetRequest{Key: flag.Arg(1)})
-		if err != nil {
-			fmt.Println(err)
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		args := strings.Split(scanner.Text(), " ")
+		switch args[0] {
+		case "get":
+			res, err := client.Get(context.Background(), &pb.GetRequest{Key: args[1]})
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(res)
+		case "set":
+			res, err := client.Set(context.Background(), &pb.SetRequest{Key: args[1], Value: []byte(strings.Join(args[2:], " "))})
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(res)
+		case "flushall":
+			res, err := client.FlushAll(context.Background(), &pb.Empty{})
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(res)
+		case "flushkey":
+			res, err := client.FlushKey(context.Background(), &pb.FlushKeyRequest{Key: args[1]})
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(res)
+		case "exit":
+			os.Exit(0)
+		default:
+			fmt.Println("Command not recognized")
 		}
-		fmt.Println(res)
-	case "set":
-		res, err := client.Set(context.Background(), &pb.SetRequest{Key: flag.Arg(1), Value: []byte(flag.Arg(2))})
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(res)
-	case "flushall":
-		res, err := client.FlushAll(context.Background(), &pb.Empty{})
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(res)
-	case "flushkey":
-		res, err := client.FlushKey(context.Background(), &pb.FlushKeyRequest{Key: flag.Arg(1)})
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(res)
-	default:
+	}
+
+	if scanner.Err() != nil {
+		// handle error.
 	}
 }
