@@ -5,13 +5,11 @@ message Empty {}
 
 message GetRequest {
     string Key = 1;
-    Result Result = 2;
 }
 
 message SetRequest {
     string Key = 1;
     bytes Value = 2;
-    Result Result = 3;
 }
 
 message FlushKeyRequest {
@@ -20,7 +18,10 @@ message FlushKeyRequest {
 
 message GetResponse {
     bytes Value = 1;
-    Result Result = 2;
+}
+
+message GetAllResponse {
+    repeated GetReponse GetResponse = 1;
 }
 
 message Result {
@@ -30,6 +31,7 @@ message Result {
 
 service Cache {
     rpc Get(GetRequest) returns (GetResponse) {}
+    rpc GetAll(Empty) returns (GetAllResponse) {}
     rpc Set(SetRequest) returns (Result) {}
     rpc FlushAll(Empty) returns (Result) {}
     rpc FlushKey(FlushKeyRequest) returns (Result) {}
