@@ -4,21 +4,21 @@ package pb;
 message Empty {}
 
 message GetRequest {
-    bytes Key = 1;
+    string Key = 1;
 }
 
 message SetRequest {
-    bytes Key = 1;
-    bytes Value = 2;
+    string Key = 1;
+    string Value = 2;
 }
 
 message FlushKeyRequest {
-    bytes Key = 1;
+    string Key = 1;
 }
 
 message GetResponse {
-    bytes Key = 1;
-    bytes Value = 2;
+    string Key = 1;
+    string Value = 2;
 }
 
 message GetAllResponse {

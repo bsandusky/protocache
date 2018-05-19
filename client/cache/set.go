@@ -10,8 +10,8 @@ import (
 func Set(key, value string) (map[string]string, error) {
 	data := make(map[string]string)
 	res, err := client.Set(context.Background(), &pb.SetRequest{
-		Key:   []byte(key),
-		Value: []byte(value),
+		Key:   key,
+		Value: value,
 	})
 	if err != nil {
 		return nil, err

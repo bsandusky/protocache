@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"errors"
 
 	"github.com/bsandusky/protocache/pb"
 )
@@ -9,12 +10,16 @@ import (
 // Get returns map with key and value for given key
 func Get(key string) (map[string]string, error) {
 	data := make(map[string]string)
-	res, err := client.Get(context.Background(), &pb.GetRequest{Key: []byte(key)})
+	res, err := client.Get(context.Background(), &pb.GetRequest{Key: key})
 	if err != nil {
 		return nil, err
 	}
-	data[string(res.Key)] = string(res.Value)
 
+	if res.Value == "" {
+		return nil, errors.New("Key not recognized")
+	}
+
+	data[key] = res.Value
 	return data, nil
 }
 
@@ -27,7 +32,7 @@ func GetAll() (map[string]string, error) {
 	}
 
 	for _, r := range res.GetResponses {
-		data[string(r.Key)] = string(r.Value)
+		data[r.Key] = r.Value
 	}
 
 	return data, nil

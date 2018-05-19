@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -9,9 +10,10 @@ import (
 	"github.com/bsandusky/protocache/client/cache"
 )
 
+// Start runs cli client
 func Start() {
 	var (
-		res interface{}
+		res map[string]string
 		err error
 	)
 
@@ -34,7 +36,7 @@ func Start() {
 		case "exit":
 			os.Exit(0)
 		default:
-			res = "Command not recognized"
+			err = errors.New("Command not recognized")
 		}
 		handleOutput(res, err)
 	}
@@ -44,16 +46,10 @@ func Start() {
 	}
 }
 
-func handleOutput(res interface{}, err error) {
+func handleOutput(res map[string]string, err error) {
 
 	if err != nil {
 		fmt.Println(err)
-		fmt.Printf("> ")
-		return
-	}
-
-	if res == "" {
-		fmt.Println("Key not found")
 		fmt.Printf("> ")
 		return
 	}

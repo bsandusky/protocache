@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	store := make(map[string][]byte)
+	store := make(map[string]string)
 
 	// Server implementation
 	lis, err := net.Listen("tcp", "127.0.0.1:8080")

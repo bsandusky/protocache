@@ -20,7 +20,7 @@ func FlushAll() (map[string]string, error) {
 // FlushKey removes one key, value pair from cache
 func FlushKey(key string) (map[string]string, error) {
 	data := make(map[string]string)
-	res, err := client.FlushKey(context.Background(), &pb.FlushKeyRequest{Key: []byte(key)})
+	res, err := client.FlushKey(context.Background(), &pb.FlushKeyRequest{Key: key})
 	if err != nil {
 		return nil, err
 	}
