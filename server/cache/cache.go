@@ -23,7 +23,7 @@ func (s *Server) Get(ctx context.Context, req *pb.GetRequest) (*pb.GetResponse, 
 func (s *Server) GetAll(ctx context.Context, req *pb.Empty) (*pb.GetAllResponse, error) {
 	res := &pb.GetAllResponse{}
 	for k, v := range s.Store {
-		res.GetResponses = append(res.GetResponses, &pb.GetResponse{
+		res.GetResponse = append(res.GetResponse, &pb.GetResponse{
 			Key:   k,
 			Value: v,
 		})

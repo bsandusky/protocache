@@ -8,8 +8,7 @@ import (
 )
 
 // Get returns map with key and value for given key
-func Get(key string) (map[string]string, error) {
-	data := make(map[string]string)
+func Get(key string) (*pb.GetResponse, error) {
 	res, err := client.Get(context.Background(), &pb.GetRequest{Key: key})
 	if err != nil {
 		return nil, err
@@ -19,21 +18,19 @@ func Get(key string) (map[string]string, error) {
 		return nil, errors.New("Key not recognized")
 	}
 
-	data[key] = res.Value
-	return data, nil
+	return res, nil
 }
 
 // GetAll returns map with keys and values for all items in the cache
-func GetAll() (map[string]string, error) {
-	data := make(map[string]string)
+func GetAll() (*pb.GetAllResponse, error) {
 	res, err := client.GetAll(context.Background(), &pb.Empty{})
 	if err != nil {
 		return nil, err
 	}
 
-	for _, r := range res.GetResponses {
-		data[r.Key] = r.Value
+	if len(res.GetResponse) == 0 {
+		return nil, errors.New("Empty cache")
 	}
 
-	return data, nil
+	return res, nil
 }

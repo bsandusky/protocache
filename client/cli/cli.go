@@ -11,9 +11,9 @@ import (
 )
 
 // Start runs cli client
-func Start() {
+func Start(done chan bool) {
 	var (
-		res map[string]string
+		res interface{}
 		err error
 	)
 
@@ -34,6 +34,7 @@ func Start() {
 		case "flushkey":
 			res, err = cache.FlushKey(args[1])
 		case "exit":
+			done <- true
 			os.Exit(0)
 		default:
 			err = errors.New("Command not recognized")
@@ -46,10 +47,10 @@ func Start() {
 	}
 }
 
-func handleOutput(res map[string]string, err error) {
+func handleOutput(res interface{}, err error) {
 
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("%v\n", err)
 		fmt.Printf("> ")
 		return
 	}

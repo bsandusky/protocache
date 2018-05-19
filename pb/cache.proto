@@ -22,7 +22,7 @@ message GetResponse {
 }
 
 message GetAllResponse {
-    repeated GetResponse GetResponses = 1;
+    repeated GetResponse GetResponse = 1;
 }
 
 message Result {
