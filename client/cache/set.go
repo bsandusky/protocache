@@ -7,7 +7,7 @@ import (
 )
 
 // Set assigns a key, value pair in the cache
-func Set(key, value string) (*pb.Result, error) {
+func Set(key, value string) (map[string]string, error) {
 	res, err := client.Set(context.Background(), &pb.SetRequest{
 		Key:   key,
 		Value: value,
@@ -15,5 +15,7 @@ func Set(key, value string) (*pb.Result, error) {
 	if err != nil {
 		return nil, err
 	}
-	return res, nil
+	data := make(map[string]string)
+	data["status"] = res.Result
+	return data, nil
 }

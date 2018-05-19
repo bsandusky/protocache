@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/bsandusky/protocache/pb"
+	"github.com/bsandusky/protocache/server/util"
 )
 
 // Server is gRPC cache server object
@@ -33,7 +34,9 @@ func (s *Server) GetAll(ctx context.Context, req *pb.Empty) (*pb.GetAllResponse,
 
 // Set creates entry in server store with key and value from request
 func (s *Server) Set(ctx context.Context, req *pb.SetRequest) (*pb.Result, error) {
-	s.Store[req.Key] = req.Value
+	key := util.TrimQuotes(req.Key)
+	val := util.TrimQuotes(req.Value)
+	s.Store[key] = val
 	return &pb.Result{Result: "OK"}, nil
 }
 

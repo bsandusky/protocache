@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/bsandusky/protocache/client/cache"
@@ -13,26 +14,35 @@ import (
 // Start runs cli client
 func Start(done chan bool) {
 	var (
-		res interface{}
+		key string
+		val string
+		res map[string]string
 		err error
 	)
+	re := regexp.MustCompile(`[^\s"']+|"([^"]*)"|'([^']*)'`)
 
 	fmt.Printf("> ")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		args := strings.Split(scanner.Text(), " ")
+
+		args := re.FindAllString(scanner.Text(), -1)
+
+		if len(args) >= 2 {
+			key = trimQuotes(args[1])
+			val = trimQuotes(strings.Join(args[2:], " "))
+		}
 
 		switch args[0] {
 		case "get":
-			res, err = cache.Get(args[1])
+			res, err = cache.Get(key)
 		case "getall":
 			res, err = cache.GetAll()
 		case "set":
-			res, err = cache.Set(args[1], strings.Join(args[2:], " "))
+			res, err = cache.Set(key, val)
 		case "flushall":
 			res, err = cache.FlushAll()
 		case "flushkey":
-			res, err = cache.FlushKey(args[1])
+			res, err = cache.FlushKey(key)
 		case "exit":
 			done <- true
 			os.Exit(0)
@@ -47,7 +57,13 @@ func Start(done chan bool) {
 	}
 }
 
-func handleOutput(res interface{}, err error) {
+func trimQuotes(s string) string {
+	s = strings.Replace(s, "\"", "", -1)
+	s = strings.Replace(s, "'", "", -1)
+	return s
+}
+
+func handleOutput(res map[string]string, err error) {
 
 	if err != nil {
 		fmt.Printf("%v\n", err)

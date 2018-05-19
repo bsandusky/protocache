@@ -14,6 +14,9 @@ func Start() {
 
 	r := http.NewServeMux()
 	r.HandleFunc("/", handler.Index)
+	r.HandleFunc("/set", handler.Set)
+	r.HandleFunc("/flushkey", handler.Flushkey)
+	r.HandleFunc("/flushall", handler.Flushall)
 
 	srv := &http.Server{
 		Addr:         ":5000",
