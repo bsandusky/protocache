@@ -4,29 +4,29 @@ package pb;
 message Empty {}
 
 message GetRequest {
-    string Key = 1;
+    bytes Key = 1;
 }
 
 message SetRequest {
-    string Key = 1;
+    bytes Key = 1;
     bytes Value = 2;
 }
 
 message FlushKeyRequest {
-    string Key = 1;
+    bytes Key = 1;
 }
 
 message GetResponse {
-    bytes Value = 1;
+    bytes Key = 1;
+    bytes Value = 2;
 }
 
 message GetAllResponse {
-    repeated GetReponse GetResponse = 1;
+    repeated GetResponse GetResponses = 1;
 }
 
 message Result {
-    string Status = 1;
-    string Error = 2;
+    string Result = 1;
 }
 
 service Cache {

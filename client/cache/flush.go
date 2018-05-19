@@ -6,18 +6,24 @@ import (
 	"github.com/bsandusky/protocache/pb"
 )
 
-func FlushAll() (string, error) {
+// FlushAll removes all keys and values from cache
+func FlushAll() (map[string]string, error) {
+	data := make(map[string]string)
 	res, err := client.FlushAll(context.Background(), &pb.Empty{})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return res.Status, nil
+	data["status"] = res.Result
+	return data, nil
 }
 
-func FlushKey(key string) (string, error) {
-	res, err := client.FlushKey(context.Background(), &pb.FlushKeyRequest{Key: key})
+// FlushKey removes one key, value pair from cache
+func FlushKey(key string) (map[string]string, error) {
+	data := make(map[string]string)
+	res, err := client.FlushKey(context.Background(), &pb.FlushKeyRequest{Key: []byte(key)})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return res.Status, nil
+	data["status"] = res.Result
+	return data, nil
 }

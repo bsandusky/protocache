@@ -13,6 +13,7 @@ It has these top-level messages:
 	SetRequest
 	FlushKeyRequest
 	GetResponse
+	GetAllResponse
 	Result
 */
 package pb
@@ -46,8 +47,7 @@ func (*Empty) ProtoMessage()               {}
 func (*Empty) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
 type GetRequest struct {
-	Key    string  `protobuf:"bytes,1,opt,name=Key" json:"Key,omitempty"`
-	Result *Result `protobuf:"bytes,2,opt,name=Result" json:"Result,omitempty"`
+	Key []byte `protobuf:"bytes,1,opt,name=Key,proto3" json:"Key,omitempty"`
 }
 
 func (m *GetRequest) Reset()                    { *m = GetRequest{} }
@@ -55,24 +55,16 @@ func (m *GetRequest) String() string            { return proto.CompactTextString
 func (*GetRequest) ProtoMessage()               {}
 func (*GetRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
-func (m *GetRequest) GetKey() string {
+func (m *GetRequest) GetKey() []byte {
 	if m != nil {
 		return m.Key
-	}
-	return ""
-}
-
-func (m *GetRequest) GetResult() *Result {
-	if m != nil {
-		return m.Result
 	}
 	return nil
 }
 
 type SetRequest struct {
-	Key    string  `protobuf:"bytes,1,opt,name=Key" json:"Key,omitempty"`
-	Value  []byte  `protobuf:"bytes,2,opt,name=Value,proto3" json:"Value,omitempty"`
-	Result *Result `protobuf:"bytes,3,opt,name=Result" json:"Result,omitempty"`
+	Key   []byte `protobuf:"bytes,1,opt,name=Key,proto3" json:"Key,omitempty"`
+	Value []byte `protobuf:"bytes,2,opt,name=Value,proto3" json:"Value,omitempty"`
 }
 
 func (m *SetRequest) Reset()                    { *m = SetRequest{} }
@@ -80,11 +72,11 @@ func (m *SetRequest) String() string            { return proto.CompactTextString
 func (*SetRequest) ProtoMessage()               {}
 func (*SetRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
-func (m *SetRequest) GetKey() string {
+func (m *SetRequest) GetKey() []byte {
 	if m != nil {
 		return m.Key
 	}
-	return ""
+	return nil
 }
 
 func (m *SetRequest) GetValue() []byte {
@@ -94,15 +86,8 @@ func (m *SetRequest) GetValue() []byte {
 	return nil
 }
 
-func (m *SetRequest) GetResult() *Result {
-	if m != nil {
-		return m.Result
-	}
-	return nil
-}
-
 type FlushKeyRequest struct {
-	Key string `protobuf:"bytes,1,opt,name=Key" json:"Key,omitempty"`
+	Key []byte `protobuf:"bytes,1,opt,name=Key,proto3" json:"Key,omitempty"`
 }
 
 func (m *FlushKeyRequest) Reset()                    { *m = FlushKeyRequest{} }
@@ -110,22 +95,29 @@ func (m *FlushKeyRequest) String() string            { return proto.CompactTextS
 func (*FlushKeyRequest) ProtoMessage()               {}
 func (*FlushKeyRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
-func (m *FlushKeyRequest) GetKey() string {
+func (m *FlushKeyRequest) GetKey() []byte {
 	if m != nil {
 		return m.Key
 	}
-	return ""
+	return nil
 }
 
 type GetResponse struct {
-	Value  []byte  `protobuf:"bytes,1,opt,name=Value,proto3" json:"Value,omitempty"`
-	Result *Result `protobuf:"bytes,2,opt,name=Result" json:"Result,omitempty"`
+	Key   []byte `protobuf:"bytes,1,opt,name=Key,proto3" json:"Key,omitempty"`
+	Value []byte `protobuf:"bytes,2,opt,name=Value,proto3" json:"Value,omitempty"`
 }
 
 func (m *GetResponse) Reset()                    { *m = GetResponse{} }
 func (m *GetResponse) String() string            { return proto.CompactTextString(m) }
 func (*GetResponse) ProtoMessage()               {}
 func (*GetResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+
+func (m *GetResponse) GetKey() []byte {
+	if m != nil {
+		return m.Key
+	}
+	return nil
+}
 
 func (m *GetResponse) GetValue() []byte {
 	if m != nil {
@@ -134,33 +126,34 @@ func (m *GetResponse) GetValue() []byte {
 	return nil
 }
 
-func (m *GetResponse) GetResult() *Result {
+type GetAllResponse struct {
+	GetResponses []*GetResponse `protobuf:"bytes,1,rep,name=GetResponses" json:"GetResponses,omitempty"`
+}
+
+func (m *GetAllResponse) Reset()                    { *m = GetAllResponse{} }
+func (m *GetAllResponse) String() string            { return proto.CompactTextString(m) }
+func (*GetAllResponse) ProtoMessage()               {}
+func (*GetAllResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
+
+func (m *GetAllResponse) GetGetResponses() []*GetResponse {
 	if m != nil {
-		return m.Result
+		return m.GetResponses
 	}
 	return nil
 }
 
 type Result struct {
-	Status string `protobuf:"bytes,1,opt,name=Status" json:"Status,omitempty"`
-	Error  string `protobuf:"bytes,2,opt,name=Error" json:"Error,omitempty"`
+	Result string `protobuf:"bytes,1,opt,name=Result" json:"Result,omitempty"`
 }
 
 func (m *Result) Reset()                    { *m = Result{} }
 func (m *Result) String() string            { return proto.CompactTextString(m) }
 func (*Result) ProtoMessage()               {}
-func (*Result) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
+func (*Result) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
 
-func (m *Result) GetStatus() string {
+func (m *Result) GetResult() string {
 	if m != nil {
-		return m.Status
-	}
-	return ""
-}
-
-func (m *Result) GetError() string {
-	if m != nil {
-		return m.Error
+		return m.Result
 	}
 	return ""
 }
@@ -171,6 +164,7 @@ func init() {
 	proto.RegisterType((*SetRequest)(nil), "pb.SetRequest")
 	proto.RegisterType((*FlushKeyRequest)(nil), "pb.FlushKeyRequest")
 	proto.RegisterType((*GetResponse)(nil), "pb.GetResponse")
+	proto.RegisterType((*GetAllResponse)(nil), "pb.GetAllResponse")
 	proto.RegisterType((*Result)(nil), "pb.Result")
 }
 
@@ -186,6 +180,7 @@ const _ = grpc.SupportPackageIsVersion4
 
 type CacheClient interface {
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
+	GetAll(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAllResponse, error)
 	Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*Result, error)
 	FlushAll(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Result, error)
 	FlushKey(ctx context.Context, in *FlushKeyRequest, opts ...grpc.CallOption) (*Result, error)
@@ -203,6 +198,15 @@ func NewCacheClient(cc *grpc.ClientConn) CacheClient {
 func (c *cacheClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
 	out := new(GetResponse)
 	err := grpc.Invoke(ctx, "/pb.Cache/Get", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cacheClient) GetAll(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAllResponse, error) {
+	out := new(GetAllResponse)
+	err := grpc.Invoke(ctx, "/pb.Cache/GetAll", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -272,6 +276,7 @@ func (x *cacheListenerClient) Recv() (*Result, error) {
 
 type CacheServer interface {
 	Get(context.Context, *GetRequest) (*GetResponse, error)
+	GetAll(context.Context, *Empty) (*GetAllResponse, error)
 	Set(context.Context, *SetRequest) (*Result, error)
 	FlushAll(context.Context, *Empty) (*Result, error)
 	FlushKey(context.Context, *FlushKeyRequest) (*Result, error)
@@ -296,6 +301,24 @@ func _Cache_Get_Handler(srv interface{}, ctx context.Context, dec func(interface
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CacheServer).Get(ctx, req.(*GetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Cache_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CacheServer).GetAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Cache/GetAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CacheServer).GetAll(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -384,6 +407,10 @@ var _Cache_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Cache_Get_Handler,
 		},
 		{
+			MethodName: "GetAll",
+			Handler:    _Cache_GetAll_Handler,
+		},
+		{
 			MethodName: "Set",
 			Handler:    _Cache_Set_Handler,
 		},
@@ -409,23 +436,23 @@ var _Cache_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("pb/cache.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 286 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x92, 0x4f, 0x4b, 0xc3, 0x40,
-	0x10, 0xc5, 0xdd, 0x86, 0xc6, 0x66, 0x2a, 0xad, 0xac, 0x22, 0xa5, 0xa7, 0xb2, 0x45, 0xc8, 0xc5,
-	0x28, 0x15, 0xbc, 0xab, 0xd4, 0x1c, 0xea, 0x69, 0x03, 0xe2, 0x35, 0x29, 0x03, 0x15, 0xd6, 0x66,
-	0xdd, 0x3f, 0x87, 0x7c, 0x4c, 0xbf, 0x91, 0xec, 0x26, 0x35, 0x25, 0x18, 0x6f, 0xfb, 0x76, 0x1e,
-	0xbf, 0x99, 0x79, 0xbb, 0x30, 0x91, 0xc5, 0xed, 0x36, 0xdf, 0xee, 0x30, 0x91, 0xaa, 0x34, 0x25,
-	0x1d, 0xc8, 0x82, 0x9d, 0xc2, 0x70, 0xfd, 0x29, 0x4d, 0xc5, 0x9e, 0x00, 0x52, 0x34, 0x1c, 0xbf,
-	0x2c, 0x6a, 0x43, 0xcf, 0x21, 0xd8, 0x60, 0x35, 0x23, 0x0b, 0x12, 0x47, 0xdc, 0x1d, 0x29, 0x83,
-	0x90, 0xa3, 0xb6, 0xc2, 0xcc, 0x06, 0x0b, 0x12, 0x8f, 0x57, 0x90, 0xc8, 0x22, 0xa9, 0x6f, 0x78,
-	0x53, 0x61, 0xef, 0x00, 0xd9, 0x7f, 0x8c, 0x4b, 0x18, 0xbe, 0xe5, 0xc2, 0xa2, 0x47, 0x9c, 0xf1,
-	0x5a, 0x1c, 0x91, 0x83, 0x5e, 0xf2, 0x12, 0xa6, 0x2f, 0xc2, 0xea, 0xdd, 0x06, 0xab, 0x5e, 0x3c,
-	0x4b, 0x61, 0xec, 0x57, 0xd0, 0xb2, 0xdc, 0x6b, 0x6c, 0xbb, 0x91, 0xbf, 0xbb, 0xf5, 0xef, 0xf1,
-	0x70, 0xf0, 0xd0, 0x2b, 0x08, 0x33, 0x93, 0x1b, 0xab, 0x9b, 0x3e, 0x8d, 0x72, 0xec, 0xb5, 0x52,
-	0xa5, 0xf2, 0x90, 0x88, 0xd7, 0x62, 0xf5, 0x4d, 0x60, 0xf8, 0xec, 0x02, 0xa6, 0x31, 0x04, 0x29,
-	0x1a, 0x3a, 0x71, 0xf0, 0x36, 0xd6, 0xf9, 0xf4, 0x57, 0xd7, 0x33, 0xb2, 0x13, 0xba, 0x84, 0x20,
-	0x3b, 0x38, 0xdb, 0xf0, 0xe6, 0x47, 0x63, 0x79, 0xd3, 0xc8, 0xaf, 0xff, 0x28, 0x04, 0x8d, 0x5c,
-	0xc5, 0xbf, 0x59, 0xc7, 0x74, 0xd3, 0x98, 0x5c, 0xd2, 0x17, 0xae, 0xd2, 0x49, 0xac, 0x63, 0xbf,
-	0x86, 0xd1, 0xeb, 0x87, 0x36, 0xb8, 0x47, 0xd5, 0xcb, 0xbc, 0x23, 0x45, 0xe8, 0xff, 0xca, 0xfd,
-	0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x85, 0x2e, 0xeb, 0x57, 0x3d, 0x02, 0x00, 0x00,
+	// 287 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x4f, 0x4b, 0xc3, 0x40,
+	0x10, 0xc5, 0x9b, 0x86, 0xc6, 0x76, 0x5a, 0x52, 0x19, 0x45, 0x42, 0x0e, 0x12, 0xb6, 0x08, 0xf1,
+	0x60, 0x94, 0x56, 0x3f, 0x80, 0x48, 0xcd, 0xa1, 0x9e, 0xb6, 0xe0, 0xbd, 0x29, 0x03, 0x15, 0xd6,
+	0x66, 0xed, 0x6e, 0x0e, 0xf9, 0xee, 0x1e, 0x64, 0x37, 0x69, 0x4d, 0x03, 0x15, 0x6f, 0xf3, 0xe7,
+	0xe5, 0x37, 0x2f, 0x8f, 0x05, 0x5f, 0x66, 0xf7, 0xeb, 0xd5, 0x7a, 0x43, 0x89, 0xdc, 0xe5, 0x3a,
+	0xc7, 0xae, 0xcc, 0xd8, 0x19, 0xf4, 0xe6, 0x9f, 0x52, 0x97, 0xec, 0x1a, 0x20, 0x25, 0xcd, 0xe9,
+	0xab, 0x20, 0xa5, 0xf1, 0x1c, 0xdc, 0x05, 0x95, 0x81, 0x13, 0x39, 0xf1, 0x88, 0x9b, 0x92, 0x3d,
+	0x02, 0x2c, 0xff, 0xd8, 0xe3, 0x25, 0xf4, 0xde, 0x57, 0xa2, 0xa0, 0xa0, 0x6b, 0x67, 0x55, 0xc3,
+	0x26, 0x30, 0x7e, 0x15, 0x85, 0xda, 0x2c, 0xa8, 0x3c, 0x8d, 0x7e, 0x82, 0xa1, 0x3d, 0xad, 0x64,
+	0xbe, 0x55, 0xf4, 0x6f, 0xf6, 0x1c, 0xfc, 0x94, 0xf4, 0xb3, 0x10, 0x87, 0x2f, 0x67, 0x30, 0x6a,
+	0x80, 0x54, 0xe0, 0x44, 0x6e, 0x3c, 0x9c, 0x8e, 0x13, 0x99, 0x25, 0x8d, 0x39, 0x3f, 0x12, 0xb1,
+	0x08, 0x3c, 0x4e, 0xaa, 0x10, 0x1a, 0xaf, 0xf6, 0x95, 0xbd, 0x3d, 0xe0, 0x75, 0x37, 0xfd, 0x76,
+	0xa0, 0xf7, 0x62, 0x72, 0xc3, 0x18, 0xdc, 0x94, 0x34, 0xfa, 0x07, 0xa2, 0xfd, 0xa5, 0xb0, 0x7d,
+	0x81, 0x75, 0xf0, 0x16, 0xbc, 0xca, 0x1c, 0x0e, 0xcc, 0xd2, 0x66, 0x1c, 0x62, 0xad, 0x6b, 0x78,
+	0x66, 0x1d, 0x9c, 0x80, 0xbb, 0xdc, 0x43, 0x7f, 0x23, 0x0e, 0xc1, 0xf4, 0x95, 0x03, 0x2b, 0xea,
+	0xdb, 0x20, 0x5b, 0xc4, 0x63, 0xd1, 0x5d, 0x2d, 0x32, 0x99, 0x5d, 0x98, 0x4d, 0x2b, 0xfb, 0x96,
+	0xfc, 0x06, 0xfa, 0x6f, 0x1f, 0x4a, 0xd3, 0x96, 0x76, 0x27, 0x99, 0x0f, 0x4e, 0xe6, 0xd9, 0xd7,
+	0x32, 0xfb, 0x09, 0x00, 0x00, 0xff, 0xff, 0x0f, 0x50, 0x30, 0xc9, 0x3f, 0x02, 0x00, 0x00,
 }

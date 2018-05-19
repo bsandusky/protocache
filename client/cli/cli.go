@@ -11,7 +11,7 @@ import (
 
 func Start() {
 	var (
-		res string
+		res interface{}
 		err error
 	)
 
@@ -23,6 +23,8 @@ func Start() {
 		switch args[0] {
 		case "get":
 			res, err = cache.Get(args[1])
+		case "getall":
+			res, err = cache.GetAll()
 		case "set":
 			res, err = cache.Set(args[1], strings.Join(args[2:], " "))
 		case "flushall":
@@ -42,7 +44,7 @@ func Start() {
 	}
 }
 
-func handleOutput(res string, err error) {
+func handleOutput(res interface{}, err error) {
 
 	if err != nil {
 		fmt.Println(err)

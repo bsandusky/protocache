@@ -6,13 +6,17 @@ import (
 	"github.com/bsandusky/protocache/pb"
 )
 
-func Set(key, value string) (string, error) {
+// Set assigns a key, value pair in the cache
+func Set(key, value string) (map[string]string, error) {
+	data := make(map[string]string)
 	res, err := client.Set(context.Background(), &pb.SetRequest{
-		Key:   key,
+		Key:   []byte(key),
 		Value: []byte(value),
 	})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return res.Status, nil
+	data["status"] = res.Result
+
+	return data, nil
 }
