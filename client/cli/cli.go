@@ -55,7 +55,7 @@ func Start(done chan bool) {
 	}
 
 	if scanner.Err() != nil {
-		// handle error.
+		//TODO: handle error
 	}
 }
 

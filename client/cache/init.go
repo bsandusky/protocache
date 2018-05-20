@@ -5,14 +5,20 @@ import (
 	"fmt"
 
 	"github.com/bsandusky/protocache/pb"
+	"google.golang.org/grpc"
 )
 
 var (
 	client pb.CacheClient
 )
 
-// InitCache sets client cache for cache package
-func InitCache(cacheClient pb.CacheClient) {
-	client = cacheClient
-	fmt.Printf("Cache initialized\n")
+// InitClient establishes connection with gRPC server and returns error if not initialized
+func InitClient(host, port string) error {
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", host, port), grpc.WithInsecure())
+	if err != nil {
+		return err
+	}
+	client = pb.NewCacheClient(conn)
+	fmt.Printf("Cache client initialized\n")
+	return nil
 }

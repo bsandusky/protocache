@@ -8,7 +8,6 @@ import (
 
 // FlushAll removes all keys and values from cache
 func FlushAll() (map[string]string, error) {
-
 	res, err := client.FlushAll(context.Background(), &pb.Empty{})
 	if err != nil {
 		return nil, err
