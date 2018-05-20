@@ -16,9 +16,11 @@ func main() {
 	}
 
 	done := make(chan bool)
-	go cli.Start(done)
-	go explorer.Start()
+	go cli.Run(done)
+	go explorer.Run(done)
 
-	// Wait for exit command to close
-	<-done
+	// Wait for exit commands to close
+	for i := 0; i < 2; i++ {
+		<-done
+	}
 }

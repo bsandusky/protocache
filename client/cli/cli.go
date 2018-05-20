@@ -11,8 +11,8 @@ import (
 	"github.com/bsandusky/protocache/client/cache"
 )
 
-// Start runs cli client
-func Start(done chan bool) {
+// Run starts cli client
+func Run(done chan bool) {
 	var (
 		key string
 		val string
@@ -21,6 +21,7 @@ func Start(done chan bool) {
 	)
 	re := regexp.MustCompile(`[^\s"']+|"([^"]*)"|'([^']*)'`)
 
+	fmt.Printf("Cli client initialized\n")
 	fmt.Printf("> ")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -47,7 +48,8 @@ func Start(done chan bool) {
 			res, err = cache.FlushKey(key)
 		case "exit":
 			done <- true
-			os.Exit(0)
+			fmt.Printf("Cli client shutdown\n")
+			return
 		default:
 			err = errors.New("Command not recognized")
 		}

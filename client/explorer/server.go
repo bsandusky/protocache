@@ -9,8 +9,8 @@ import (
 	"github.com/bsandusky/protocache/client/explorer/handler"
 )
 
-// Start runs web explorer client
-func Start() {
+// Run starts web explorer client
+func Run(done chan bool) {
 
 	r := http.NewServeMux()
 	r.HandleFunc("/", handler.GetAll)
