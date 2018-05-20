@@ -7,9 +7,10 @@ import (
 	"github.com/bsandusky/protocache/client/cache"
 )
 
-// Index serves template with cache details
-func Index(w http.ResponseWriter, r *http.Request) {
+// GetAll serves go template with cache data
+func GetAll(w http.ResponseWriter, r *http.Request) {
 	res, _ := cache.GetAll()
+	// TODO: Handle error
 	tmpl := template.Must(template.ParseFiles("client/explorer/public/index.html"))
 	tmpl.Execute(w, res)
 }

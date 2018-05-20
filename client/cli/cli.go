@@ -39,6 +39,8 @@ func Start(done chan bool) {
 			res, err = cache.GetAll()
 		case "set":
 			res, err = cache.Set(key, val)
+		case "hset":
+			res, err = cache.HSet(key, val)
 		case "flushall":
 			res, err = cache.FlushAll()
 		case "flushkey":

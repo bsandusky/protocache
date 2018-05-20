@@ -16,6 +16,7 @@ type Server struct {
 // Get returns value for given key
 func (s *Server) Get(ctx context.Context, req *pb.GetRequest) (*pb.GetResponse, error) {
 	return &pb.GetResponse{
+		Key:   req.Key,
 		Value: s.Store[req.Key],
 	}, nil
 }
@@ -34,9 +35,9 @@ func (s *Server) GetAll(ctx context.Context, req *pb.Empty) (*pb.GetAllResponse,
 
 // Set creates entry in server store with key and value from request
 func (s *Server) Set(ctx context.Context, req *pb.SetRequest) (*pb.Result, error) {
-	key := util.TrimQuotes(req.Key)
-	val := util.TrimQuotes(req.Value)
-	s.Store[key] = val
+	kv := []string{req.Key, req.Value}
+	kv = util.TrimQuotes(kv)
+	s.Store[kv[0]] = kv[1]
 	return &pb.Result{Result: "OK"}, nil
 }
 

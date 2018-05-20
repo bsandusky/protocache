@@ -13,7 +13,7 @@ import (
 func Start() {
 
 	r := http.NewServeMux()
-	r.HandleFunc("/", handler.Index)
+	r.HandleFunc("/", handler.GetAll)
 	r.HandleFunc("/set", handler.Set)
 	r.HandleFunc("/flushkey", handler.Flushkey)
 	r.HandleFunc("/flushall", handler.Flushall)
